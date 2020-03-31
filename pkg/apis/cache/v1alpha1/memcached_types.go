@@ -16,6 +16,8 @@ type MemcachedSpec struct {
 
 	// The desired number of member Pods for the deployment
 	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors=true
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors.displayName="Pod Count"
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors.x-descriptors="urn:alm:descriptor:com.tectonic.ui:podCount,urn:alm:descriptor:io.kubernetes:custom"
 	Size int32 `json:"size"`
 }
 
@@ -38,6 +40,10 @@ type MemcachedStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=memcacheds,scope=Namespaced
 // +operator-sdk:gen-csv:customresourcedefinitions.displayName="Memcached App"
+// +operator-sdk:gen-csv:customresourcedefinitions.resources=`Deployment,v1,""`
+// +operator-sdk:gen-csv:customresourcedefinitions.resources=`ReplicaSet,v1,""`
+// +operator-sdk:gen-csv:customresourcedefinitions.resources=`Service,v1,""`
+// +operator-sdk:gen-csv:customresourcedefinitions.resources=`Pod,v1,""`
 type Memcached struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
