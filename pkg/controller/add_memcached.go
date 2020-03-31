@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/example-inc/memcached-operator/pkg/controller/memcached"
+	"github.com/DanielXLee/memcached-operator/pkg/controller/memcached"
 )
 
 func init() {

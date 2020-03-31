@@ -10,26 +10,34 @@ import (
 // MemcachedSpec defines the desired state of Memcached
 // +k8s:openapi-gen=true
 type MemcachedSpec struct {
-	Size int32 `json:"size"`
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
+
+	// The desired number of member Pods for the deployment
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors=true
+	Size int32 `json:"size"`
 }
 
 // MemcachedStatus defines the observed state of Memcached
 // +k8s:openapi-gen=true
 type MemcachedStatus struct {
-	Nodes []string `json:"nodes"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
+
+	// Nodes are the names of the memcached pods
+	// +listType=set
+	Nodes []string `json:"nodes"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Memcached is the Schema for the memcacheds API
+// Represents a cluster of Memcached apps
 // +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
+// +kubebuilder:resource:path=memcacheds,scope=Namespaced
+// +operator-sdk:gen-csv:customresourcedefinitions.displayName="Memcached App"
 type Memcached struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

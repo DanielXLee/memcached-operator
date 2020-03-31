@@ -9,6 +9,7 @@ rules:
   resources:
   - pods
   - services
+  - services/finalizers
   - endpoints
   - persistentvolumeclaims
   - events
@@ -53,7 +54,7 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - cache.example.com
+  - cache.test.com
   resources:
   - '*'
   verbs:
