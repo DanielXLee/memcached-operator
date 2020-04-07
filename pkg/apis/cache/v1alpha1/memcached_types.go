@@ -31,7 +31,18 @@ type MemcachedStatus struct {
 	// Nodes are the names of the memcached pods
 	// +listType=set
 	Nodes []string `json:"nodes"`
+	// Phase is the memcached phase
+	Phase MemcachedPhase `json:"phase,omitempty"`
 }
+
+type MemcachedPhase string
+
+const (
+	MemcachedPhaseCreating MemcachedPhase = "Creating"
+	MemcachedPhaseRunning  MemcachedPhase = "Running"
+	MemcachedPhaseFailed   MemcachedPhase = "Failed"
+	MemcachedPhaseDeleting MemcachedPhase = "Deleting"
+)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

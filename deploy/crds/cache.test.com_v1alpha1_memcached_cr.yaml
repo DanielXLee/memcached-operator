@@ -1,7 +1,7 @@
 apiVersion: cache.test.com/v1alpha1
 kind: Memcached
 metadata:
-  name: example-memcached
+  name: example-memcached-beta
 spec:
   # Add fields here
-  size: 2
+  size: 3

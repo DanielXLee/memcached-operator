@@ -140,6 +140,23 @@ func (r *ReconcileMemcached) Reconcile(request reconcile.Request) (reconcile.Res
 		}
 	}
 
+	if deployment.Status.ReadyReplicas != deployment.Status.Replicas {
+		memcached.Status.Phase = cachev1alpha1.MemcachedPhaseCreating
+		err = r.client.Update(context.TODO(), memcached)
+		if err != nil {
+			reqLogger.Error(err, "Failed to update Memcached Operand.", "Memcached.NamespacedName", request.NamespacedName)
+			return reconcile.Result{}, err
+		}
+		return reconcile.Result{RequeueAfter: 5}, nil
+	} else {
+		memcached.Status.Phase = cachev1alpha1.MemcachedPhaseRunning
+		err = r.client.Update(context.TODO(), memcached)
+		if err != nil {
+			reqLogger.Error(err, "Failed to update Memcached Operand.", "Memcached.NamespacedName", request.NamespacedName)
+			return reconcile.Result{}, err
+		}
+	}
+
 	// Check if the Service already exists, if not create a new one
 	// NOTE: The Service is used to expose the Deployment. However, the Service is not required at all for the memcached example to work. The purpose is to add more examples of what you can do in your operator project.
 	service := &corev1.Service{}

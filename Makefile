@@ -1,7 +1,7 @@
 .DEFAULT_GOAL:=help
 SHELL:=/bin/bash
 NAMESPACE=memcached
-CSV_VERSION=1.2.0
+CSV_VERSION=2.0.0
 IMAGE_REPO ?= quay.io/danielxlee
 IMAGE_NAME ?= memcached-operator-img
 
