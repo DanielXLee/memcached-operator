@@ -1,7 +1,9 @@
 .DEFAULT_GOAL:=help
 SHELL:=/bin/bash
 NAMESPACE=memcached
-CSV_VERSION=2.0.0
+VERSION=2.1.0
+CSV_VERSION=${VERSION}
+IMAGE_VERSION=${VERSION}
 IMAGE_REPO ?= quay.io/danielxlee
 IMAGE_NAME ?= memcached-operator-img
 
@@ -77,10 +79,10 @@ test-e2e: ## Run integration e2e tests with different options.
 	- operator-sdk test local ./test/e2e --verbose
 
 image: ## Build image
-	operator-sdk build ${IMAGE_REPO}/${IMAGE_NAME}
+	operator-sdk build ${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 push: image ## Push image to registry
-	docker push ${IMAGE_REPO}/${IMAGE_NAME}
+	docker push ${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 csv: ## Push CSV package to the catalog
 	@RELEASE=${CSV_VERSION} common/scripts/push-csv.sh

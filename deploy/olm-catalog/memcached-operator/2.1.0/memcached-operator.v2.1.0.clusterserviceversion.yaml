@@ -11,7 +11,8 @@ metadata:
             "name": "example-memcached-beta"
           },
           "spec": {
-            "size": 3
+            "size": 3,
+            "version": "1.4.36-alpine"
           }
         }
       ]
@@ -22,9 +23,10 @@ metadata:
     createdAt: "2020-03-31T11:05:16Z"
     description: Main enterprise application providing business critical features
       with high availability and no manual intervention.
+    olm.skipRange: '>=1.0.0 <2.0.0'
     repository: https://github.com/DanielXLee/memcached-operator
     support: DXL
-  name: memcached-operator.v2.0.0
+  name: memcached-operator.v2.1.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -38,12 +40,6 @@ spec:
       - kind: Deployment
         name: ""
         version: v1
-      - kind: Pod
-        name: ""
-        version: v1
-      - kind: ReplicaSet
-        name: ""
-        version: v1
       - kind: Service
         name: ""
         version: v1
@@ -54,6 +50,9 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:podCount
         - urn:alm:descriptor:io.kubernetes:custom
+      - description: Memcached version
+        displayName: Version
+        path: version
       version: v1alpha1
   description: Main enterprise application providing business critical features with
     high availability and no manual intervention.
@@ -90,7 +89,7 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: memcached-operator
-                image: quay.io/danielxlee/memcached-operator-img
+                image: quay.io/danielxlee/memcached-operator-img:2.1.0
                 imagePullPolicy: Always
                 name: memcached-operator
                 resources: {}
@@ -176,4 +175,5 @@ spec:
   provider:
     name: DanielXLee
     url: www.example.com
-  version: 2.0.0
+  replaces: memcached-operator.v2.0.0
+  version: 2.1.0

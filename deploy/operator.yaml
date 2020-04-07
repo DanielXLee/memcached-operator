@@ -16,7 +16,7 @@ spec:
       containers:
         - name: memcached-operator
           # Replace this with the built image name
-          image: quay.io/danielxlee/memcached-operator-img
+          image: quay.io/danielxlee/memcached-operator-img:2.1.0
           command:
           - memcached-operator
           imagePullPolicy: Always
