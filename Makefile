@@ -46,16 +46,31 @@ code-fmt: ## Run go fmt for this project
 	@echo go fmt
 	go fmt $$(go list ./... )
 
+
+code-tidy: ## Run go mod tidy to update dependencies
+	@echo go mod tidy
+	go mod tidy -v
+
+code-gen-bundle: ## Run operator-sdk bundle create to create metadata
+	operator-sdk bundle create \
+		--generate-only \
+		--directory ./deploy/olm-catalog/memcached-operator/${CSV_VERSION} \
+		--package memcached-operator \
+		--channels alpha,beta \
+		--default-channel alpha
+
 code-gen: ## Run the operator-sdk commands to generated code (k8s and openapi)
 	@echo Updating the deep copy files with the changes in the API
 	operator-sdk generate k8s
 	@echo Updating the CRD files with the OpenAPI validations
 	operator-sdk generate crds
 	@echo Updating/Generating a ClusterServiceVersion YAML manifest for the operator
-	operator-sdk generate csv --csv-version ${CSV_VERSION} --update-crds
+	operator-sdk generate csv --make-manifests=false --csv-version ${CSV_VERSION} --update-crds
+	operator-sdk generate csv --csv-version ${CSV_VERSION}
 
 code-dev: ## Run the default dev commands which are the go fmt and vet then execute the $ make code-gen
 	@echo Running the common required commands for developments purposes
+	- make code-tidy
 	- make code-fmt
 	- make code-vet
 	- make code-gen
@@ -78,14 +93,23 @@ test-e2e: ## Run integration e2e tests with different options.
 	@echo ... Running with the --verbose param ...
 	- operator-sdk test local ./test/e2e --verbose
 
+##@ Publish
 image: ## Build image
 	operator-sdk build ${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 push: image ## Push image to registry
 	docker push ${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_VERSION}
 
-csv: ## Push CSV package to the catalog
+push-csv: ## Push CSV package to the catalog
 	@RELEASE=${CSV_VERSION} common/scripts/push-csv.sh
+
+bundle-image: ## Create operator bundle image
+	@echo "Bulding the operator bundle image"
+	- operator-sdk bundle create quay.io/danielxlee/memcached-operator-bundle:v${CSV_VERSION} \
+		--directory ./deploy/olm-catalog/memcached-operator/manifests \
+		--package memcached-operator \
+		--channels alpha,beta \
+		--default-channel alpha
 
 .PHONY: help
 help: ## Display this help
